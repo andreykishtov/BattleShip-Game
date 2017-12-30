@@ -1,2 +1,8 @@
-const connection = io => io.on('connection', socket => require('./emitters')(socket, io));
+const emit = require('./emitters');
+const connection = function(io) {
+    io.on('connection', function(socket) {
+        emit(socket, io);
+    });
+}
+
 module.exports = connection;
