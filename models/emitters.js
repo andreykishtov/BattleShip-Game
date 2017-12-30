@@ -1,28 +1,16 @@
-var users = require('./users');
-var gamelogics = require('./gamelogics');
-var emiters = function(socket, io) {
-  socket.on('startConnection', dataBeforeConnection => {
-    //User Connected
-    let usersInServer = users.getUsers();
-    socket.emit('connection Established', usersInServer); //Responce To User
-    checkuserForEmit(socket);
-    waitingForGame(socket, io);
-  });
-  dissconnect(socket);
-};
+const users = require('./users');
+const gamelogics = require('./gamelogics');
 
-function checkuserForEmit(socket) {
-  socket.on('username', newUsername => {
-    var ok = users.checkUser(newUsername, socket.id); //check person
-    if (!ok) {
-      socket.broadcast.emit('usernameOK', newUsername); //Responce To User
-    } else {
-      socket.emit('usernameNotOk', newUsername); //Responce To User
-    }
-  });
-}
+let checkuserForEmit = socket =>
+  socket.on(
+    'username',
+    newUsername =>
+      users.checkUser(newUsername, socket.id)
+        ? socket.emit('usernameNotOk', newUsername)
+        : socket.broadcast.emit('usernameOK', newUsername)
+  );
 
-function waitingForGame(socket, io) {
+const waitingForGame = (socket, io) => {
   socket.on('startGame', newUsername => {
     console.log(newUsername);
     let socketid = users.findsocketID(newUsername);
@@ -35,7 +23,6 @@ function waitingForGame(socket, io) {
     io.to(game[1].id).emit('connetionBeforeGame', game[1].board, true, newUsername);
     io.to(game[0].id).emit('2playersPlaying', myUsername, newUsername);
     socket.broadcast.emit('2playersPlaying', myUsername, newUsername);
-    ///////////////////////////****game started****///////////////////////////////
   });
 
   socket.on('checkifHit', cell => {
@@ -58,14 +45,23 @@ function waitingForGame(socket, io) {
       }
     }
   });
-}
+};
 
-function dissconnect(socket) {
+const dissconnect = socket =>
   socket.on('disconnect', () => {
-    let username = users.findUserName(socket.id);
+    const username = users.findUserName(socket.id);
     users.removeUser(username);
     socket.broadcast.emit('disconnectedUser', username);
   });
-}
+
+const emiters = (socket, io) => {
+  socket.on('startConnection', dataBeforeConnection => {
+    const usersInServer = users.getUsers();
+    socket.emit('connection Established', usersInServer);
+    checkuserForEmit(socket);
+    waitingForGame(socket, io);
+  });
+  dissconnect(socket);
+};
 
 module.exports = emiters;

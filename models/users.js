@@ -33,7 +33,7 @@ class Users {
         return true;
       }
     }
-    this.addUser(username, socketid);
+    return this.addUser(username, socketid);
   }
 
   findsocketID(username) {
