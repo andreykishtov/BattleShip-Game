@@ -94,7 +94,6 @@ class CommunicationLogic {
   }
 
   removePlayer(username) {
-    //need to check
     let ulofPlayerNames = document.getElementById('playerList');
     let ulStatusofPlayers = document.getElementById('playerStatus');
     for (var index = 0; index < ulofPlayerNames.children.length; index++) {
@@ -107,21 +106,27 @@ class CommunicationLogic {
     }
   }
 
-  endGame(usernameOfWinner, NameOfloser, toall) {
-    if (!toall) {
-      battleshipGame.drawText(`The Winner Is ${usernameOfWinner}`);
-      setTimeout(function() {
-        let canvas = document.getElementById('canvas');
-        canvas.innerHTML = '';
-        let playerList = document.getElementById('playerlistDiv');
-        playerList.style.display = 'block';
-        cmlogic.UsernameChangeStatus(usernameOfWinner, 'Online');
-        cmlogic.UsernameChangeStatus(NameOfloser, 'Online');
-      }, 3000);
-    } else {
+  changeStatusPlayerEnd(usernameOfWinner, NameOfloser) {
+    battleshipGame.drawText(`The Winner Is ${usernameOfWinner}`);
+    setTimeout(function() {
+      const canvas = document.getElementById('canvas');
+      canvas.innerHTML = '';
+      const playerList = document.getElementById('playerlistDiv');
+      playerList.style.display = 'block';
       cmlogic.UsernameChangeStatus(usernameOfWinner, 'Online');
       cmlogic.UsernameChangeStatus(NameOfloser, 'Online');
-    }
+    }, 3000);
+  }
+
+  endGameStatusChange(usernameOfWinner, NameOfloser) {
+    cmlogic.UsernameChangeStatus(usernameOfWinner, 'Online');
+    cmlogic.UsernameChangeStatus(NameOfloser, 'Online');
+  }
+
+  endGame(usernameOfWinner, NameOfloser, toall) {
+    toall
+      ? this.endGameStatusChange(usernameOfWinner, NameOfloser)
+      : this.changeStatusPlayerEnd(usernameOfWinner, NameOfloser);
   }
 
   startGame(username) {

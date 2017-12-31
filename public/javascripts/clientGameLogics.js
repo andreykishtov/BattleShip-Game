@@ -29,27 +29,18 @@ class GameLogics extends BattleShip {
     return current === 'miss' || current === 'hit';
   }
 
-  hitShip(cellObj, Fromopponent) {
-    cellObj.setState(this.currenthit); //hit Draw
+  drawShipState(cellObj, Fromopponent, state) {
+    cellObj.setState(state);
     cellObj.draw(this.ctx);
-    if (Fromopponent) {
-      battleshipGame.drawText('Other Player Turn', 'black', 100, 200);
-    } else {
-      battleshipGame.drawText('your Turn Attack!', 'black', 100, 200);
-    }
-  }
-  missShip(cellObj, Fromopponent) {
-    cellObj.setState(this.currentmiss); //miss Draw
-    cellObj.draw(this.ctx);
-    if (Fromopponent) {
-      battleshipGame.drawText('your Turn Attack!', 'black', 100, 200);
-    } else {
-      battleshipGame.drawText('Other Player Turn', 'black', 100, 200);
-    }
+    Fromopponent
+      ? battleshipGame.drawText('your Turn Attack!', 'black', 100, 200)
+      : battleshipGame.drawText('Other Player Turn', 'black', 100, 200);
   }
 
   checkboardIfHit(cell, ifHit, Fromopponent) {
     let cellObj = this.board[cell];
-    ifHit ? this.hitShip(cellObj, Fromopponent) : this.missShip(cellObj, Fromopponent);
+    ifHit
+      ? this.drawShipState(cellObj, !Fromopponent, this.currenthit)
+      : this.drawShipState(cellObj, Fromopponent, this.currentmiss);
   }
 }
