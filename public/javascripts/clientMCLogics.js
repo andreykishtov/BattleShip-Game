@@ -1,15 +1,10 @@
 class CommunicationLogic {
   firstTimeGetUsersFromServer(usersFromServer) {
-    usersFromServer.users.forEach(element => {
-      this.createOption(element, 'Online');
-    });
-    usersFromServer.usersinGame.forEach(element => {
-      this.UsernameChangeStatus(element, 'Playing');
-    });
+    usersFromServer.users.forEach(element => this.createOption(element, 'Online'));
+    usersFromServer.usersinGame.forEach(element => this.UsernameChangeStatus(element, 'Playing'));
   }
 
   createOption(playerName, playerStatus) {
-    //add player
     let ul = document.getElementById('playerList');
     let ulStatus = document.getElementById('playerStatus');
     let li = document.createElement('li');
@@ -48,7 +43,7 @@ class CommunicationLogic {
   }
 
   usernameIsBad(username) {
-    alert(`UserName Allready Exsists: ${username}`); //doesn`t work
+    alert(`UserName Allready Exsists: ${username}`);
     document.getElementById('greeting').style.display = 'block';
     document.getElementById('playerlistDiv').style.display = 'none';
   }
@@ -62,7 +57,6 @@ class CommunicationLogic {
         return;
       }
       username = username[0].innerText;
-      ////////////////
       let ulofPlayerNames = document.getElementById('playerList');
       let ulStatusofPlayers = document.getElementById('playerStatus');
       for (var index = 0; index < ulofPlayerNames.children.length; index++) {
@@ -74,8 +68,8 @@ class CommunicationLogic {
           }
         }
       }
-      this.startGame(username); //creates Canvas
-      communication.startGame(username); //STARTS GAME
+      this.startGame(username);
+      communication.startGame(username);
     });
   }
 
@@ -131,7 +125,6 @@ class CommunicationLogic {
   }
 
   startGame(username) {
-    //Creates Canvas
     let playerList = document.getElementById('playerlistDiv');
     playerList.style.display = 'none';
     battleshipGame = new BattleShip('canvas');
@@ -146,8 +139,8 @@ class CommunicationLogic {
 }
 
 ///global varibles
-var communication = new Communication();
-var cmlogic = new CommunicationLogic();
+const communication = new Communication();
+const cmlogic = new CommunicationLogic();
 
 var battleshipGame;
 var gameLogics;

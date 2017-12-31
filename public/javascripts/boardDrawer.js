@@ -9,8 +9,6 @@ class BattleShip {
     this.ctx = this.canvas.getContext('2d');
     this.ctx.canvas.width = window.innerWidth;
     this.ctx.canvas.height = window.innerHeight / 2;
-    // this.ctx.canvas.width = document.body.offsetWidth;
-    // this.ctx.canvas.height = document.body.offsetHeight / 2.2;
     this.sizeofcell = Math.floor(Math.min(this.canvas.clientHeight, this.canvas.clientWidth) / size);
   }
 
@@ -40,7 +38,6 @@ class BattleShip {
   }
 
   drawBattleship(ships) {
-    //will draw battleships
     if (ships) {
       for (let key in ships) {
         let ship = ships[key];
@@ -56,7 +53,7 @@ class BattleShip {
       return;
     }
 
-    let cellObj = gameLogics.board[cell]; //  this for drawBattleships is from other object
+    let cellObj = gameLogics.board[cell];
     let current = cellObj.getState();
     if (current === 'hit' || current === 'miss' || current === 'ship') {
       return;
@@ -118,7 +115,6 @@ class Cell {
   }
 
   drawO(ctx) {
-    //miss
     ctx.beginPath();
     ctx.fillStyle = 'black';
     ctx.arc(this.x + this.width / 2, this.y + this.width / 2, this.width / 6, 0, 2 * Math.PI);
@@ -127,16 +123,14 @@ class Cell {
   }
 
   drawShip(ctx) {
-    //ship
-    ctx.beginPath(); //added
+    ctx.beginPath();
     ctx.fillStyle = 'blue';
     ctx.fillRect(this.x + 5, this.y + 5, this.width - 10, this.height - 10);
     ctx.stroke();
   }
 
   drawX(ctx) {
-    //hit
-    ctx.beginPath(); //added
+    ctx.beginPath();
     ctx.fillStyle = 'blue';
     ctx.fillRect(this.x + 5, this.y + 5, this.width - 10, this.height - 10);
     let offset = this.width / 5;

@@ -9,25 +9,21 @@ class Communication {
   startComunication() {
     this.socket.emit('startConnection');
     this.socket.on('connection Established', usersObject => {
-      //connected
       if (usersObject.users.length) {
-        cmlogic.firstTimeGetUsersFromServer(usersObject); //function outside
+        cmlogic.firstTimeGetUsersFromServer(usersObject);
       }
       this.socket.on('connetionBeforeGame', (ships, draw, username) => {
-        //connected to game
         if (draw) {
-          cmlogic.startGame(username); //only second Player
+          cmlogic.startGame(username);
           battleshipGame.drawText('Game Started Wait For It!', 'black', 100, 200);
         }
         cmlogic.playGame(ships);
       });
     });
-    this.socket.on('disconnectedUser', function(username) {
-      cmlogic.removePlayer(username);
-    });
-    this.socket.on('2playersPlaying', function(myUsername, newUsername) {
-      cmlogic.changeStatus(myUsername, newUsername);
-    });
+    this.socket.on('disconnectedUser', username => cmlogic.removePlayer(username));
+    this.socket.on('2playersPlaying', (myUsername, newUsername) =>
+      cmlogic.changeStatus(myUsername, newUsername)
+    );
   }
 
   sendUserToPlayer(username) {
@@ -35,15 +31,8 @@ class Communication {
   }
 
   waitingForPlayer() {
-    this.socket.on('usernameNotOk', username => {
-      //connected
-      cmlogic.usernameIsBad(username);
-    });
-
-    this.socket.on('usernameOK', username => {
-      //connected
-      cmlogic.createOption(username, 'Online');
-    });
+    this.socket.on('usernameNotOk', username => cmlogic.usernameIsBad(username));
+    this.socket.on('usernameOK', username => cmlogic.createOption(username, 'Online'));
   }
 
   startGame(username) {
@@ -52,25 +41,19 @@ class Communication {
   }
 
   fromServerIfHit(cell) {
-    console.log('x');
     this.socket.emit('checkifHit', cell);
   }
 
   answerIfHit() {
-    this.socket.on('answerIfHit', ifHit => {
-      //connected
-      gameLogics.checkboardIfHit(ifHit.cell, ifHit.answer);
-    });
-    this.socket.on('answerIfHitFromOtherPlayer', ifHit => {
-      //connected
-      gameLogics.checkboardIfHit(ifHit.cell - 100, ifHit.answer, ifHit.opponent);
-    });
+    this.socket.on('answerIfHit', ifHit => gameLogics.checkboardIfHit(ifHit.cell, ifHit.answer));
+    this.socket.on('answerIfHitFromOtherPlayer', ifHit =>
+      gameLogics.checkboardIfHit(ifHit.cell - 100, ifHit.answer, ifHit.opponent)
+    );
   }
 
   endGame() {
-    this.socket.on('endGame', (usernameOfWinner, loserUsername, forall) => {
-      //connected
-      cmlogic.endGame(usernameOfWinner, loserUsername, forall);
-    });
+    this.socket.on('endGame', (usernameOfWinner, loserUsername, forall) =>
+      cmlogic.endGame(usernameOfWinner, loserUsername, forall)
+    );
   }
 }
