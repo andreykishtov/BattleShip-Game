@@ -1,20 +1,12 @@
-//var randomships = require('./randomShips');
-
 class Game {
   constructor(id1, id2) {
     this.player1 = id1;
     this.player2 = id2;
     this.gameInit();
     this.currentPlayer;
-    //this.board1 = new randomships;
-    //this.board2 = new randomships;
     this.winners = {};
     this.winners[this.player1] = 0;
     this.winners[this.player2] = 0;
-    // this.objOfPlayers[0].board = randomships.createShips(4);
-    //this.board1.printBoard();
-    // this.objOfPlayers[1].board = randomships.createShips(4);
-    //this.board2.printBoard();
   }
 
   gameInit() {
@@ -53,15 +45,11 @@ class Game {
   }
 
   checkGame(socketid, cell) {
-    if (socketid != this.player1) {
-      //uses board of other player!//
-      var currentboard = this.objOfPlayers[0].board;
-    } else {
-      var currentboard = this.objOfPlayers[1].board;
-    }
-    for (var key in currentboard) {
-      var ship = currentboard[key];
-      for (var index = 0; index < ship.length; index++) {
+    const currentboard = socketid != this.player1 ? this.objOfPlayers[0].board : this.objOfPlayers[1].board;
+
+    for (let key in currentboard) {
+      let ship = currentboard[key];
+      for (let index = 0; index < ship.length; ++index) {
         if (ship[index] == cell) {
           return true;
         }
@@ -70,31 +58,27 @@ class Game {
     return false;
   }
 
-  ifPlayerAllowed(socketid, ifHit) {
-    let otherPlayerID = this.FindOtherPlayer(socketid);
+  ifPlayerAllowed(socketId, ifHit) {
+    const otherPlayerID = this.FindOtherPlayer(socketId);
     if (ifHit === true && otherPlayerID !== this.currentPlayer) {
-      return this.currentPlayer;
-    } else {
-      if (otherPlayerID !== this.currentPlayer) {
-        let player = this.currentPlayer;
-        this.currentPlayer = otherPlayerID;
-        return player;
-      }
+      return true;
     }
+
+    if (otherPlayerID !== this.currentPlayer) {
+      this.currentPlayer = otherPlayerID;
+      return true;
+    }
+
+    return false;
   }
 
-  FindOtherPlayer(socketid, ishit) {
-    if (socketid === this.player1) {
-      //uses board of other player!//
-      return this.player2;
-    } else {
-      return this.player1;
-    }
+  FindOtherPlayer(socketid) {
+    return socketid === this.player1 ? this.player2 : this.player1;
   }
 
   gameEnds(IfHit, socketid) {
     if (IfHit) {
-      return ++this.winners[socketid] === 20; //no more ships
+      return ++this.winners[socketid] === 20;
     }
   }
 }

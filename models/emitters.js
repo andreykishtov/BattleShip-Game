@@ -1,5 +1,5 @@
 const users = require('./users');
-const gamelogics = require('./gamelogics');
+const gameLogics = require('./gameLogics');
 
 const checkUserNameAvailability = socket =>
   socket.on(
@@ -12,7 +12,7 @@ const checkUserNameAvailability = socket =>
 
 const startGame = (socket, io, newUsername) => {
   const myUsername = users.findUserName(socket.id);
-  const CurrentGame = new gamelogics(socket.id, users.findsocketID(newUsername));
+  const CurrentGame = new gameLogics(socket.id, users.findsocketID(newUsername));
   const game = CurrentGame.objOfPlayers;
   users.currentGame.push(CurrentGame);
   CurrentGame.currentPlayer = game[0].id;
@@ -55,7 +55,7 @@ const startConnection = (socket, io, dataBeforeConnection) => {
   socket.on('checkifHit', cell => checkIfHit(socket, io, cell));
 };
 
-const emiters = (socket, io) => {
+const emitters = (socket, io) => {
   socket.on('startConnection', dataBeforeConnection => startConnection(socket, io, dataBeforeConnection));
   socket.on('disconnect', () => {
     const username = users.findUserName(socket.id);
@@ -64,4 +64,4 @@ const emiters = (socket, io) => {
   });
 };
 
-module.exports = emiters;
+module.exports = emitters;
