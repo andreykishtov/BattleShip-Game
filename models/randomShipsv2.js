@@ -1,21 +1,30 @@
-var model = {
+const model = {
   boardSize: 10,
   numShips: 3,
-  shipsSunk: 0,
-
-  ships: [{ locations: [0] }, { locations: [0, 0] }, { locations: [0, 0, 0] }, { locations: [0, 0, 0, 0] }],
+  ships: [
+    { ship0: [0, 0, 0, 0] },
+    { ship1: [0, 0, 0] },
+    { ship2: [0, 0, 0] },
+    { ship3: [0, 0] },
+    { ship4: [0, 0] },
+    { ship5: [0, 0] },
+    { ship6: [0] },
+    { ship7: [0] },
+    { ship8: [0] },
+    { ship9: [0] }
+  ],
 
   generateShipLocations: function() {
     var locations;
-    const shipCount = 4;
+    const shipsToReturn = {};
+    const shipCount = this.ships.length;
     for (var i = 0; i < shipCount; i++) {
       do {
-        locations = this.generateShip(this.ships[i].locations.length);
-      } while (this.collision(locations));
-      this.ships[i].locations = locations;
+        locations = this.generateShip(this.ships[i][`ship${i}`].length);
+      } while (this.collision(locations, shipsToReturn));
+      shipsToReturn[`ship${i}`] = locations;
     }
-    console.log('Ships array: ');
-    console.log(this.ships);
+    return shipsToReturn;
   },
 
   createRandom: function(size) {
@@ -37,18 +46,17 @@ var model = {
 
     for (var i = 0; i < shipLength; i++) {
       direction === 1
-        ? newShipLocations.push(row + '' + (col + i))
-        : newShipLocations.push(row + i + '' + col);
+        ? newShipLocations.push(parseInt(row + '' + (col + i)))
+        : newShipLocations.push(parseInt(row + i + '' + col));
     }
     return newShipLocations;
   },
 
-  collision: function(locations) {
-    const shipCount = 4;
-    for (var i = 0; i < shipCount; i++) {
-      var ship = this.ships[i];
+  collision: function(locations, shipsCreated) {
+    for (var i = 0; i < Object.keys(shipsCreated).length; i++) {
+      const ship = shipsCreated[`ship${i}`];
       for (var j = 0; j < locations.length; j++) {
-        if (ship.locations.indexOf(locations[j]) >= 0) {
+        if (ship.indexOf(locations[j]) >= 0) {
           return true;
         }
       }
@@ -57,4 +65,4 @@ var model = {
   }
 };
 
-model.generateShipLocations();
+module.exports = model;
