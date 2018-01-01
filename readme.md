@@ -32,26 +32,25 @@ Pure Javascript and the HTML5 Canvas.
 
 ## High Level Design
 
-​``` sequence
-
-Alice->Bob: Hello Bob, how are you?
-Note right of Bob: Bob thinks
-Bob-->Alice: I am good thanks!
-
-​```
-
-​``` mermaid
-
-%% Example of sequence diagram
-sequenceDiagram
-Alice->>Bob: Hello Bob, how are you?
-alt is sick
-Bob->>Alice: Not so good :(
-else is well
-Bob->>Alice: Feeling fresh like a daisy
-end
-opt Extra response
-Bob->>Alice: Thanks for asking
-end
-
-​```
+```
+                          +-------+
+                          |clients|                  +-----------+
+                          +---+---+                  |random ship|
+            files sent to     |                      |generator  |
+            all clients    +--v---+                  +-------+---+
+           +---------------+server+-----------+              ^
+           |               +----+-+        +--v--+           |
+           |                    |          |users+------+    |
+       +---v---------------+    |          +-----+   +--v----+---+
+       |client static files|    |                    |game logics|
+       +--+----------------+    +------------+       +----^------+
+          |                                  |            |
+ +--------v--+          +-------+         +--v----+       |
+ |user logics+--------+->emiters<---------+emiters+-------+
+ +-------+---+        | +-------+         +-------+
+         |            |      +--------------^
++--------v----+       |         socket.IO connection
+| board Drawer|      +v----------+
++-------------+      |game logics|
+                     +-----------+
+```
